@@ -15,7 +15,7 @@
         "batch_size": 200
     }, 
     "grid_cells_parameters": {
-        "Ng": 40960
+        "Ng": 4096
     },
     "model_parameters": {
         "RNN_type": "RNN",
