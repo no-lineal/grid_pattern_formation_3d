@@ -3,7 +3,7 @@
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:tesla:4
 #SBATCH -t 100:00:00
-#SBATCH --mem=10G
+#SBATCH --mem=100G
 
 source activate grid38
 
