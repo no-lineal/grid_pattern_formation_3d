@@ -1,8 +1,9 @@
 #!/bin/bash
-#SBATCH -J grid_train
+#SBATCH -J cube_train
 #SBATCH --partition=gpu
-#SBATCH --gres=gpu:tesla:1
+#SBATCH --gres=gpu:tesla:4
 #SBATCH -t 100:00:00
+#SBATCH --mem=10G
 
 source activate grid38
 
