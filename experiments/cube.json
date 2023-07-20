@@ -4,7 +4,7 @@
         "model_name": "100_1000_cube/"
     }, 
     "place_cell_parameters": {
-        "Np": 13824, 
+        "Np": 15360, 
         "sigma": 0.12, 
         "surround_scale": 2.0, 
         "periodic": false, 
@@ -15,7 +15,7 @@
         "batch_size": 200
     }, 
     "grid_cells_parameters": {
-        "Ng": 110592
+        "Ng": 4096
     },
     "model_parameters": {
         "RNN_type": "RNN",
