@@ -24,6 +24,15 @@ class Trainer(object):
         self.loss = []
         self.err = []
 
+        ### 
+        if torch.cuda.device_count() > 1:
+
+            print("Let's use", torch.cuda.device_count(), "GPUs!")
+            self.model = torch.nn.DataParallel( self.model )
+
+        self.model = self.model.to( options.device )
+        ###
+
         # Set up checkpoints
 
         self.ckpt_dir = os.path.join(options.save_path, options.model_name)
