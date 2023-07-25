@@ -62,7 +62,7 @@ class Trainer(object):
 
         self.model.zero_grad()
 
-        loss, err = self.model.module.compute_loss(inputs, pc_outputs, pos)
+        loss, err = self.model.compute_loss(inputs, pc_outputs, pos)
 
         loss.backward()
         # gradient exploding
