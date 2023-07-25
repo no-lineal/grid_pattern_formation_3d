@@ -172,7 +172,7 @@ if __name__ == '__main__':
 
     # model
     model = RNN( options, place_cells )
-    #model = model.to( options.device )
+    model = model.to( options.device )
 
     # train
     trainer = Trainer( options, model, trajectory_generator, polygon, restore=False )
