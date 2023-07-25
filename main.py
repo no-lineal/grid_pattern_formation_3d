@@ -172,6 +172,12 @@ if __name__ == '__main__':
 
     # model
     model = RNN( options, place_cells )
+
+    if torch.cuda.device_count() > 1:
+
+        print("Let's use", torch.cuda.device_count(), "GPUs!")
+        model = torch.nn.DataParallel( model )
+
     model = model.to( options.device )
 
     # train
