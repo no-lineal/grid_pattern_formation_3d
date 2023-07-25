@@ -15,14 +15,14 @@
         "batch_size": 200
     }, 
     "grid_cells_parameters": {
-        "Ng": 40960
+        "Ng": 36864
     },
     "model_parameters": {
         "RNN_type": "RNN",
         "weight_decay": 1e-4,
         "activation": "relu",
         "learning_rate": 1e-4,
-        "n_epochs": 400,
-        "n_steps": 500
+        "n_epochs": 100,
+        "n_steps": 1000
     }
 }
