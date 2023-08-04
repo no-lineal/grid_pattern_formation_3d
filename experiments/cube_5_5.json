@@ -1,0 +1,28 @@
+{
+    "shape": "cube",
+    "directories": {
+        "model_name": "100_1000_cube_small/"
+    },
+    "place_cell_parameters": {
+        "Np": 2560,
+        "sigma": 0.12,
+        "surround_scale": 2.0,
+        "periodic": false,
+        "DoG": true
+    },
+    "trajectory_parameters": {
+        "sequence_length": 10,
+        "batch_size": 400
+    },
+    "grid_cells_parameters": {
+        "Ng": 20480
+    },
+    "model_parameters": {
+        "RNN_type": "RNN",
+        "weight_decay": 1e-4,
+        "activation": "relu",
+        "learning_rate": 1e-4,
+        "n_epochs": 1,
+        "n_steps": 10
+    }
+}

@@ -27,4 +27,4 @@ def get_polygon( polygon ):
 
     if polygon == 'cube':
 
-        return cube( 2.2 )
+        return cube( 1.1 )

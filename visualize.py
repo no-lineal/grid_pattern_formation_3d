@@ -88,22 +88,20 @@ def compute_ratemaps( model, trajectory_generator, polygon, options, res=20, n_a
     idxs = idxs[ : Ng ]
 
     g = np.zeros( [ n_avg, options.batch_size * options.sequence_length, Ng ] )
-    pos = np.zeros( [ n_avg, options.batch_size * options.sequence_length + 2000, 2 ] )
+    pos = np.zeros( [ n_avg, options.batch_size * options.sequence_length, 3 ] )
 
-    activations = np.zeros( [ Ng, res, res ] ) 
-    counts  = np.zeros( [ res, res ] )
+    activations = np.zeros( [ Ng, res, res, res ] ) 
+    counts  = np.zeros( [ res, res, res ] )
 
     for index in tqdm(range(n_avg)):
         
         inputs, pos_batch, _ = trajectory_generator.get_test_batch()
         g_batch = model.g(inputs).detach().cpu().numpy()
-        pos_batch = np.reshape(pos_batch.cpu(), [-1, 2])
+        pos_batch = np.reshape(pos_batch.cpu(), [-1, 3])
         g_batch = g_batch[:,:,idxs].reshape(-1, Ng)
         
         g[index] = g_batch
-        pos[index] = pos_batch # :c
-
-        #min_x, min_y, max_x, max_y = polygon.bounds
+        pos[index] = pos_batch 
 
         min_values = np.min( polygon, axis=0)
         max_values = np.max( polygon, axis=0)
@@ -114,21 +112,27 @@ def compute_ratemaps( model, trajectory_generator, polygon, options, res=20, n_a
 
         x_batch = (pos_batch[:,0] + width/2) / (width) * res
         y_batch = (pos_batch[:,1] + height/2) / (height) * res
+        z_batch = (pos_batch[:,2] + depth/2) / (depth) * res
 
-        for i in range(options.batch_size*options.sequence_length):
+        for i in range( options.batch_size * options.sequence_length ):
+
             x = x_batch[i]
             y = y_batch[i]
-            if x >=0 and x < res and y >=0 and y < res:
-                counts[int(x), int(y)] += 1
-                activations[:, int(x), int(y)] += g_batch[i, :]
+            z = z_batch[i]
+
+            if x >=0 and x < res and y >=0 and y < res and z >=0 and z < res:
+
+                counts[ int(x), int(y), int(z) ] += 1
+                activations[ :, int(x), int(y), int(z) ] += g_batch[i, :]
 
     for x in tqdm(range(res)):
         for y in range(res):
-            if counts[x, y] > 0:
-                activations[:, x, y] /= counts[x, y]
+            for z in range(res):
+                if counts[x, y, z] > 0:
+                    activations[:, x, y, z] /= counts[x, y, z]
                 
     g = g.reshape([-1, Ng])
-    pos = pos.reshape([-1, 2])
+    pos = pos.reshape([-1, 3])
 
     # # scipy binned_statistic_2d is slightly slower
     # activations = scipy.stats.binned_statistic_2d(pos[:,0], pos[:,1], g.T, bins=res)[0]

@@ -116,7 +116,7 @@ class Trainer(object):
                                                                  'most_recent_model.pth'))
 
                 # Save a picture of rate maps
-                save_ratemaps(model=self.model, trajectory_generator=self.trajectory_generator, polygon=self.polygon, options=self.options, step=epoch_idx)
+                #save_ratemaps(model=self.model, trajectory_generator=self.trajectory_generator, polygon=self.polygon, options=self.options, step=epoch_idx)
 
         # Save loss and error
         with open( os.path.join( self.ckpt_dir, 'loss.json' ), 'w' ) as f:

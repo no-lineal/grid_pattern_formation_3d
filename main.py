@@ -131,11 +131,11 @@ def plot_trajectory( place_cells, trajectory_generator, polygon, options ):
 if __name__ == '__main__':
 
     # test trajectory
-    test_trajectory = False
+    test_trajectory = True
 
     # where am i?
     PATH = os.getcwd() + '/'
-    input_file = PATH + 'experiments/cube.json'
+    input_file = PATH + 'experiments/cube_1_1.json'
 
     print(f'PATH: {PATH}')
     print(f'experiment: {input_file}')

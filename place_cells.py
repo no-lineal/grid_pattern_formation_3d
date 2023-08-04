@@ -1,5 +1,6 @@
 import torch
 import numpy as np
+import scipy.interpolate as interpolate
 
 class PlaceCells( object ):
 
@@ -113,3 +114,38 @@ class PlaceCells( object ):
         pred_pos = self.us[idxs].mean(-2)
         
         return pred_pos
+
+    def grid_pc( self, pc_outputs, res=32 ):
+
+        """
+        
+        Grid place cell outputs.interpolate place cell outputs onto a grid
+        
+        """
+
+        min_x, min_y, min_z = self.polygon.min(0)
+        max_x, max_y, max_z = self.polygon.max(0)
+
+        width = max_x - min_x
+        height = max_y - min_y
+        depth = max_z - min_z
+
+        coors_x = torch.linspace(min_x, max_x, res)
+        coors_y = torch.linspace(min_y, max_y, res)
+        coors_z = torch.linspace(min_z, max_z, res)
+
+        grid_x, grid_y, grid_z = torch.meshgrid(coors_x, coors_y, coors_z)
+        grid = np.stack([grid_x.ravel(), grid_y.ravel(), grid_z.ravel()]).T
+
+        # Convert to numpy
+        pc_outputs = pc_outputs.reshape(-1, self.Np)
+
+        T = pc_outputs.shape[0]
+        pc = np.zeros((T, res, res, res))
+
+        for i in range( len(pc_outputs) ):
+
+            gridval = interpolate.griddata( self.us.cpu(), pc_outputs[i].cpu(), grid )
+            pc[ i ] = gridval.reshape( [ res, res, res ] )
+
+        return pc
