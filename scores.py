@@ -28,17 +28,25 @@ import scipy.ndimage as ndimage
 
 
 def circle_mask(size, radius, in_val=1.0, out_val=0.0):
-  """Calculating the grid scores with different radius."""
+
+  """
+  Calculating the grid scores with different radius.
+  """
+
   sz = [math.floor(size[0] / 2), math.floor(size[1] / 2)]
+
   x = np.linspace(-sz[0], sz[1], size[1])
   x = np.expand_dims(x, 0)
   x = x.repeat(size[0], 0)
+
   y = np.linspace(-sz[0], sz[1], size[1])
   y = np.expand_dims(y, 1)
   y = y.repeat(size[1], 1)
+
   z = np.sqrt(x**2 + y**2)
   z = np.less_equal(z, radius)
   vfunc = np.vectorize(lambda b: b and in_val or out_val)
+
   return vfunc(z)
 
 
@@ -46,28 +54,37 @@ class GridScorer(object):
   """Class for scoring ratemaps given trajectories."""
 
   def __init__(self, nbins, coords_range, mask_parameters, min_max=False):
-    """Scoring ratemaps given trajectories.
+
+    """
+    
+    Scoring ratemaps given trajectories.
     Args:
       nbins: Number of bins per dimension in the ratemap.
       coords_range: Environment coordinates range.
       mask_parameters: parameters for the masks that analyze the angular
         autocorrelation of the 2D autocorrelation.
       min_max: Correction.
+
     """
+
     self._nbins = nbins
     self._min_max = min_max
     self._coords_range = coords_range
-    self._corr_angles = [30, 45, 60, 90, 120, 135, 150]
+    self._corr_angles = [ 30, 45, 60, 90, 120, 135, 150 ]
+
     # Create all masks
-    self._masks = [(self._get_ring_mask(mask_min, mask_max), (mask_min,
-                                                              mask_max))
-                   for mask_min, mask_max in mask_parameters]
+    self._masks = [ ( self._get_ring_mask(mask_min, mask_max), ( mask_min, mask_max ) ) for mask_min, mask_max in mask_parameters ]
+
     # Mask for hiding the parts of the SAC that are never used
     self._plotting_sac_mask = circle_mask(
-        [self._nbins * 2 - 1, self._nbins * 2 - 1],
-        self._nbins,
-        in_val=1.0,
-        out_val=np.nan)
+      [
+        self._nbins * 2 - 1, 
+        self._nbins * 2 - 1
+      ],
+      self._nbins,
+      in_val=1.0,
+      out_val=np.nan
+    )
 
   def calculate_ratemap(self, xs, ys, activations, statistic='mean'):
     return scipy.stats.binned_statistic_2d(
@@ -112,6 +129,7 @@ class GridScorer(object):
 
     ones_seq1 = np.ones(seq1.shape)
     ones_seq1[np.isnan(seq1)] = 0
+
     ones_seq2 = np.ones(seq2.shape)
     ones_seq2[np.isnan(seq2)] = 0
 
@@ -137,13 +155,16 @@ class GridScorer(object):
         np.subtract(
             np.divide(sum_seq1_sq, n_bins),
             (np.divide(np.square(sum_seq1), n_bins_sq))), 0.5)
+    
     std_seq2 = np.power(
         np.subtract(
             np.divide(sum_seq2_sq, n_bins),
             (np.divide(np.square(sum_seq2), n_bins_sq))), 0.5)
+    
     covar = np.subtract(
         np.divide(seq1_x_seq2, n_bins),
         np.divide(np.multiply(sum_seq1, sum_seq2), n_bins_sq))
+    
     x_coef = np.divide(covar, np.multiply(std_seq1, std_seq2))
     x_coef = np.real(x_coef)
     x_coef = np.nan_to_num(x_coef)
@@ -173,7 +194,11 @@ class GridScorer(object):
     return self.grid_score_60(corrs), self.grid_score_90(corrs), variance
 
   def get_scores(self, rate_map):
-    """Get summary of scrores for grid cells."""
+
+    """
+      Get summary of scrores for grid cells.
+    """
+
     sac = self.calculate_sac(rate_map)
     rotated_sacs = self.rotated_sacs(sac, self._corr_angles)
 
@@ -181,6 +206,7 @@ class GridScorer(object):
         self.get_grid_scores_for_mask(sac, rotated_sacs, mask)
         for mask, mask_params in self._masks  # pylint: disable=unused-variable
     ]
+    
     scores_60, scores_90, variances = map(np.asarray, zip(*scores))  # pylint: disable=unused-variable
     max_60_ind = np.argmax(scores_60)
     max_90_ind = np.argmax(scores_90)

@@ -22,7 +22,7 @@ class RNN(torch.nn.Module):
             in_features=self.Np, 
             out_features=self.Ng, 
             bias=False
-            )
+        )
         
         # recurrent layer
         self.RNN = torch.nn.RNN(
@@ -30,14 +30,14 @@ class RNN(torch.nn.Module):
             hidden_size=self.Ng, 
             nonlinearity=options.activation, 
             bias=False
-            )
+        )
 
         # linear read-out weights
         self.decoder = torch.nn.Linear(
             in_features=self.Ng, 
             out_features=self.Np, 
             bias=False
-            )
+        )
         
         # output layer (probability distribution)
         self.softmax = torch.nn.Softmax(dim=-1)
