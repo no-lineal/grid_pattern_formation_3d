@@ -113,6 +113,7 @@ if __name__ == '__main__':
 
     checkpoint = torch.load( checkpoint_file, map_location=torch.device('cpu') )
     model.load_state_dict( checkpoint  )
+    model = model.to( options.device )
 
     print('model loaded...')
 
