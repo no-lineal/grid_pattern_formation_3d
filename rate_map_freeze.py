@@ -136,4 +136,8 @@ if __name__ == '__main__':
     print(f'g: {g.shape}')
     print(f'pos: {pos.shape}')
 
-    np.save( precomputed_path + 'rate_map_cube_small_10_10.npy', rate_map )
+    rate_map_chunks = np.split( rate_map, 10 )
+
+    for i, chunk in enumerate( rate_map_chunks ):
+        
+        np.save( f'rate_map_{i}.npy', chunk )
