@@ -136,8 +136,23 @@ if __name__ == '__main__':
     print(f'g: {g.shape}')
     print(f'pos: {pos.shape}')
 
+    activations_chunks = np.split( activations, 10 )
     rate_map_chunks = np.split( rate_map, 10 )
+    g_chunks = np.split( g, 10 )
+    pos_chunks = np.split( pos, 10 )
 
     for i, chunk in enumerate( rate_map_chunks ):
-        
-        np.save( f'rate_map_{i}.npy', chunk )
+
+        np.save( precomputed_path + f'rate_map_{i}.npy', chunk )
+
+    for i, chunk in enumerate( activations_chunks ):
+
+        np.save( precomputed_path + f'activations_{i}.npy', chunk )
+
+    for i, chunk in enumerate( g_chunks ):
+
+        np.save( precomputed_path + f'g_{i}.npy', chunk )
+
+    for i, chunk in enumerate( pos_chunks ):
+
+        np.save( precomputed_path + f'pos_{i}.npy', chunk )
