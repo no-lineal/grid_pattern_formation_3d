@@ -117,8 +117,8 @@ if __name__ == '__main__':
 
     print('model loaded...')
 
-    n_avg = 100
-    res = 100
+    n_avg = 75
+    res = 50
     Ng = options.Ng
 
     activations, rate_map, g, pos = compute_ratemaps(
